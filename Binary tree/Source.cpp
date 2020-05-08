@@ -25,8 +25,7 @@
 
 
 #include <iostream>
-#include <locale.h>
-#include <conio.h>
+#include <locale>
 
 using namespace std;
 
@@ -36,7 +35,7 @@ struct btree
    btree *right, *left;
 };
 
-btree* BuildTree()  //Функция ввода дерева
+/*btree* BuildTree()  //Функция ввода дерева
 {
    btree* d; //Указатель на корень дерева
    char sym; //Текущий символ
@@ -61,16 +60,83 @@ btree* BuildTree()  //Функция ввода дерева
       }
    }
 
-}
+}*/
 
-void NLR(btree* d, int * k)          //Реализация прямого обхода дерева в глубину через рекурсию
+btree* BuildTree()  
+{
+   btree* d; 
+   char sym, sym2;
+   cin >> sym;
+   switch (sym)
+   {
+      case '(':
+      {
+         d = new btree;
+         cin >> sym;
+         d->el = sym;
+         d->left = BuildTree();
+         d->right = BuildTree();
+         return d;
+      }
+      case ',':
+      {
+         cin >> sym2;
+         switch (sym2)
+         {
+         case ',':
+         {
+            return NULL;
+         }
+         case ')':
+         {
+            return NULL;
+         }
+         case '(':
+         {
+            sym = sym2;
+         }
+         default:
+         {
+            sym = sym2;
+         }
+         }
+      }
+      case ')':
+      {
+         return NULL;
+      }
+      default:
+      {
+         cin >> sym2;
+         if (sym2 == ',')
+         {
+            d = new btree;
+            d->el = sym;
+            d->left = NULL;
+            d->right = NULL;
+            return d;
+         }
+         else
+         {
+            d = new btree;
+            d->el=sym;
+            d->left = NULL;
+            d->right = NULL;
+            return d;
+         }
+      }
+   }
+   
+   }
+
+void NLR(btree* d, int &k)          //Реализация прямого обхода дерева в глубину через рекурсию
 {
    if (d)
    {
       if (!(d->left) && !(d->right)) //Обработка текущего элемента
       {
          cout << d->el << ' ';
-         (*k)++;
+         k++;
       }
       else 
       {
@@ -81,7 +147,7 @@ void NLR(btree* d, int * k)          //Реализация прямого обхода дерева в глубин
 
 }
 
-btree* DelTree(btree* d)  //Где-то в этой функции проблема, но я не понимаю, где. Остальное вроде всё работает правильно
+btree* DelTree(btree* d)  //Функция удаления дерева, реализованная рекурсивно
 {
    if (d)
    {
@@ -94,7 +160,7 @@ btree* DelTree(btree* d)  //Где-то в этой функции проблема, но я не понимаю, где
 
 int main()
 {
-   setlocale(LC_ALL, "Rus");
+   setlocale(LC_CTYPE, "Rus");
 
    btree* d;
    int k = 0;
@@ -102,10 +168,10 @@ int main()
    cout << "Введите дерево:" << endl;
    d = BuildTree();
 
-   NLR(d, &k);
+   NLR(d, k);
 
    cout << endl << "Количество листьев в дереве: " << k;
 
    d = DelTree(d);
-   _getch();
+   getchar();
 }
