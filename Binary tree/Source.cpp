@@ -85,14 +85,8 @@ btree* DelTree(btree* d)  //Где-то в этой функции проблема, но я не понимаю, где
 {
    if (d)
    {
-      if (!d->left)
-      {
-         d->left = DelTree(d->left);
-      }
-      if (!d->right)
-      {
-         d->right = DelTree(d->right);
-      }
+      d->left = DelTree(d->left);
+      d->right = DelTree(d->right);
       delete d;
       return NULL;
    }
