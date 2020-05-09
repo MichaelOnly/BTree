@@ -35,126 +35,46 @@ struct btree
    btree *right, *left;
 };
 
-/*btree* BuildTree()  //Функция ввода дерева
+btree* BuildTree()  //Функция ввода дерева
 {
-   btree* d; //Указатель на корень дерева
+   btree* tree; //Указатель на корень дерева
    char sym; //Текущий символ
    cin >> sym;
    switch (sym)
    {
       case '(': 
       {
-         d = new btree;
+         tree = new btree;
+         cin >> tree->el;
+         tree->left = BuildTree();
+         tree->right = BuildTree();
          cin >> sym;
-         d->el = sym;
-         d->left = BuildTree();
-         d->right = BuildTree();
-         cin >> sym;
-         return d;
+         return tree;
       }
       case '0': return NULL;
-      case ',': 
-      {
-         d = BuildTree();
-         return d;
-      }
+      case ',': return BuildTree();
    }
-
-}*/
-
-btree* BuildTree()  
-{
-   btree* d; 
-   char sym, sym2;
-   cin >> sym;
-   switch (sym)
-   {
-      case '(':
-      {
-         d = new btree;
-         cin >> sym;
-         d->el = sym;
-         d->left = BuildTree();
-         d->right = BuildTree();
-         return d;
-      }
-      case ',':
-      {
-         cin >> sym2;
-         switch (sym2)
-         {
-         case ',':
-         {
-            return NULL;
-         }
-         case ')':
-         {
-            return NULL;
-         }
-         case '(':
-         {
-            sym = sym2;
-         }
-         default:
-         {
-            sym = sym2;
-         }
-         }
-      }
-      case ')':
-      {
-         return NULL;
-      }
-      default:
-      {
-         cin >> sym2;
-         if (sym2 == ',')
-         {
-            d = new btree;
-            d->el = sym;
-            d->left = NULL;
-            d->right = NULL;
-            return d;
-         }
-         else
-         {
-            d = new btree;
-            d->el=sym;
-            d->left = NULL;
-            d->right = NULL;
-            return d;
-         }
-      }
-   }
-   
-   }
-
-void NLR(btree* d, int &k)          //Реализация прямого обхода дерева в глубину через рекурсию
-{
-   if (d)
-   {
-      if (!(d->left) && !(d->right)) //Обработка текущего элемента
-      {
-         cout << d->el << ' ';
-         k++;
-      }
-      else 
-      {
-         NLR(d->left,k);    //Обход левого поддерева
-         NLR(d->right,k);   //Обход правого поддерева
-      }
-   }
-
 }
 
-btree* DelTree(btree* d)  //Функция удаления дерева, реализованная рекурсивно
+void NLR(btree* tree, int &leafCount)      //Реализация прямого обхода дерева в глубину через рекурсию
 {
-   if (d)
+   if (tree != NULL)
    {
-      d->left = DelTree(d->left);
-      d->right = DelTree(d->right);
-      delete d;
-      return NULL;
+      NLR(tree->left, leafCount);    //Обход левого поддерева
+      NLR(tree->right, leafCount);   //Обход правого поддерева
+
+      cout << tree->el << ' ';
+      leafCount++;
+   }
+}
+
+void DeleteTree(btree* tree)  //Функция удаления дерева, реализованная рекурсивно
+{
+   if (tree != NULL)
+   {
+      DeleteTree(tree->left);
+      DeleteTree(tree->right);
+      delete tree;
    }
 }
 
@@ -162,16 +82,16 @@ int main()
 {
    setlocale(LC_CTYPE, "Rus");
 
-   btree* d;
-   int k = 0;
+   btree* tree;
+   int leafCount = 0;
 
    cout << "Введите дерево:" << endl;
-   d = BuildTree();
+   tree = BuildTree();
 
-   NLR(d, k);
+   NLR(tree, leafCount);
 
-   cout << endl << "Количество листьев в дереве: " << k;
+   cout << endl << "Количество листьев в дереве: " << leafCount;
 
-   d = DelTree(d);
+   DeleteTree(tree);
    getchar();
 }
