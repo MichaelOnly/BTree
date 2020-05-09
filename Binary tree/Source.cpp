@@ -26,6 +26,7 @@
 
 #include <iostream>
 #include <locale>
+#include <conio.h>
 
 using namespace std;
 
@@ -93,5 +94,5 @@ int main()
    cout << endl << "Количество листьев в дереве: " << leafCount;
 
    DeleteTree(tree);
-   getchar();
+   _getch();
 }
