@@ -57,21 +57,22 @@ btree* BuildTree()  //Функция ввода дерева
    }
 }
 
-void NLR(btree* tree, int &leafCount)      //Реализация прямого обхода дерева в глубину через рекурсию
+void NLR(btree* tree, int& leafCount)      //Реализация прямого обхода дерева в глубину через рекурсию
 {
-   if (tree != NULL)
-   {
+   if (tree) {
+      if (tree->left == NULL && tree->right == NULL) {
+         cout << tree->el << ' ';
+         leafCount++;
+         return;                     //Необязательно проверять tree->left и tree->right если это лист
+      }
       NLR(tree->left, leafCount);    //Обход левого поддерева
       NLR(tree->right, leafCount);   //Обход правого поддерева
-
-      cout << tree->el << ' ';
-      leafCount++;
    }
 }
 
 void DeleteTree(btree* tree)  //Функция удаления дерева, реализованная рекурсивно
 {
-   if (tree != NULL)
+   if (tree)
    {
       DeleteTree(tree->left);
       DeleteTree(tree->right);
@@ -95,4 +96,5 @@ int main()
 
    DeleteTree(tree);
    _getch();
+   return 0;
 }
